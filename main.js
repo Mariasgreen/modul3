@@ -1,23 +1,19 @@
 
-const div = document.createElement('div');
-document.body.append(div);
 
+const par = document.createElement('p');
+par.style.height = '50px';
 const input = document.createElement('input');
-input.setAttribute('type', 'text');
-const par = document.createElement("p");
+let texting
 
-const text = () =>{
-    const text = input.value;
-    par.innerHTML = text;
-}
+document.body.append(par, input);
 
 
 
-input.addEventListener("keyup", (e)=>{
-    e.preventDefault();
-    setTimeout(text, 300);
-  });
 
 
-
-div.append(input, par)
+input.addEventListener('keypress', () => {
+    clearTimeout(texting);
+    texting = setTimeout(() => {
+      par.textContent = input.value;
+    }, 3000);
+});
