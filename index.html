@@ -2,14 +2,19 @@
 <html>
 <head>
     <title>News Portal</title>
-    <script  src="main.js" defer></script>
+    <script type ="module"  src="main.js" defer></script>
 </head>
 <body>
     <h1>News Portal</h1>
     <form id="searchForm">
-        <input type="search" id="searchInput" placeholder="Search news..." required>
-        <button type="submit">Search</button>
+      <input type="search" id="searchInput" placeholder="Search news..." required>
+      <button type="submit">Search</button>
     </form>
+    <select id="countrySelect">
+      <option value="us">United States</option>
+      <option value="ru">Russia</option>
+    </select>
+   
     <h2>Headlines</h2>
     <div id="headlinesContainer" class="container"></div>
 
