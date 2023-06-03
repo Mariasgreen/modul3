@@ -1,47 +1,22 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-    <title>News Portal</title>
-    <script type ="module"  src="main.js" defer></script>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="preload" href="fonts/Inter-Medium.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/Inter-Medium.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  <link rel="stylesheet" href="css/style.css">
+  
+  <script  src="index.js" type="module"></script>
+  
+ 
 </head>
-<body>
-    <h1>News Portal</h1>
-    <form id="searchForm">
-      <input type="search" id="searchInput" placeholder="Search news..." required>
-      <button type="submit">Search</button>
-    </form>
-    <select id="countrySelect">
-      <option value="us">United States</option>
-      <option value="ru">Russia</option>
-    </select>
-   
-    <h2>Headlines</h2>
-    <div id="headlinesContainer" class="container"></div>
 
-    <h2>Search Results</h2>
-    <div id="searchResultsContainer" class="container"></div>
-    <style>
-        .container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
 
-    .card {
-      flex: 0 0 calc(25% - 20px); 
-      margin: 10px;
-      padding: 10px;
-      border: 1px solid #ccc;
-      box-sizing: border-box;
-      text-align: center;
-    }
 
-    .card img {
-      width: 100%;
-      max-width: 100%;
-      height: auto;
-      object-fit: cover;
-    }
-    </style>
-</body>
 </html>
