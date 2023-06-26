@@ -1,5 +1,5 @@
 
-
+//import {fetchCategories}  from './category.js'
 import create from './const.js';
 
 const{ modal,
@@ -37,6 +37,7 @@ const {
   
   const openModal = () => {
     modal.classList.add('active');
+  
     num(span);
   };
   

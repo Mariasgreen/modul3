@@ -22,7 +22,7 @@ const init = () =>{
   modalModal()
   reqModal()
   totalModal()
-  fetchCategories();
+  fetchCategories()
   openWindow()
 
   renderGoods();

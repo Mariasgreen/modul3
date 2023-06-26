@@ -1,10 +1,10 @@
 const file = document.querySelector('.modal__file');
+
 const discountSection = document.querySelector('.modal__label_discount');
-const fieldset = document.querySelector('.modal__fieldset');
 
 const spacerContainer = document.createElement('div');
 spacerContainer.classList.add('spacer-container');
-fieldset.insertAdjacentElement('beforeend', spacerContainer);
+discountSection.after(spacerContainer);
 
 const spacer = document.createElement('img');
 spacer.classList.add('modal__spacer');
@@ -18,6 +18,21 @@ const message = document.createElement('p');
 message.textContent = 'Изображение не должно превышать размер 1 Мб';
 message.style.color = 'red';
 
+export const toBase = file => new Promise((resolve, reject) =>{
+  const reader = new FileReader();
+
+  reader.addEventListener('loadend', () =>{
+resolve(reader.result)
+  })
+  reader.addEventListener('loadend', () =>{
+    reject(err)
+      })
+      reader.readAsDataURL(file);
+
+}
+
+)
+
 file.addEventListener('change', () => {
   if (file.files.length > 0) {
     const selectedFile = file.files[0];
@@ -25,16 +40,18 @@ file.addEventListener('change', () => {
     if (fileSizeInMb > 1) {
       messageContainer.appendChild(message);
     } else {
-      const reader = new FileReader();
-      reader.onload = function(event) {
-        const src = event.target.result;
-        spacer.src = src;
-        spacer.style.display = 'block';
-      };
-      reader.readAsDataURL(selectedFile);
+      const src = URL.createObjectURL(selectedFile);
+      
+      spacer.style.display = 'block';
+      spacer.src = src;
+    
     }
   }
+
+
+  
 });
+
 
 
 
@@ -46,4 +63,5 @@ export default {
   spacerContainer,
   message,
   messageContainer,
+  
 };

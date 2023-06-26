@@ -1,7 +1,8 @@
 import create from './const.js';
 const {table} = create;
+import {toBase}  from './picture.js'
 
-import {loadGoods}  from './render.js'
+import {fetchCategories}  from './category.js'
 
 import{  getTotal, allTotalTableSum} from './summs.js';
 
@@ -86,19 +87,6 @@ const addProductPage = async (product, table) => {
 
 
 
-/*
-
-  export const image = () => {
-    table.addEventListener('click', (e) => {
-      const target = e.target;
-      if (target.closest('.table__btn_del')) {
-        const connectId = target.closest('tr').dataset.id;
-        openImage(connectId, target);
-      }
-    });
-  };
-
-  */
 
   
 
@@ -170,7 +158,7 @@ const addProductPage = async (product, table) => {
     const button3 = document.createElement('button');
     button3.classList.add('table__btn', 'table__btn_del');
    
-   
+  
 
     tdImages.append(button1, button2, button3);
   
@@ -182,8 +170,8 @@ const addProductPage = async (product, table) => {
 
   
   
-const openEditModal = ({ id, title, price, category, count, units, discount , description }) => {
-
+const openEditModal = ({ id, title, price, category, count, units, discount ,description,image }) => {
+  fetchCategories(); 
 
   const modalContainer = document.createElement('div');
   modalContainer.classList.add('overlay', 'active');
@@ -256,10 +244,12 @@ const openEditModal = ({ id, title, price, category, count, units, discount , de
   const categoryInput = document.createElement('input');
   categoryInput.classList.add('modal__input');
   categoryInput.setAttribute('type', 'text');
-  categoryInput.setAttribute('name', 'category');
-  categoryInput.setAttribute('id', 'category');
+  categoryInput.setAttribute('name', 'categoryId');
+  categoryInput.setAttribute('id', 'categoryId');
+  categoryInput.setAttribute('list', 'category-list-id');
   categoryInput.value = category;
 
+ 
   categoryLabel.appendChild(categoryText);
   categoryLabel.appendChild(categoryInput);
 
@@ -296,7 +286,7 @@ const openEditModal = ({ id, title, price, category, count, units, discount , de
   unitsLabel.appendChild(unitsInput);
 
   const discountLabel = document.createElement('div');
-  discountLabel.classList.add('modal__label', 'modal__label_discount');
+  discountLabel.classList.add('modal__label', 'modal__label_discount_two');
   const discountText = document.createElement('label');
   discountText.classList.add('modal__text');
   discountText.setAttribute('for', 'discount');
@@ -373,11 +363,51 @@ const openEditModal = ({ id, title, price, category, count, units, discount , de
   fileLabel.textContent = 'Добавить изображение';
 
   const fileInput = document.createElement('input');
-  fileInput.classList.add('modal__file', 'visually-hidden');
+  fileInput.classList.add('modal__file_two', 'visually-hidden');
   fileInput.setAttribute('tabindex', '-1');
   fileInput.setAttribute('type', 'file');
   fileInput.setAttribute('name', 'image');
   fileInput.setAttribute('id', 'image');
+
+
+
+// ...
+
+fileInput.addEventListener('change', () => {
+  const spacerContainer = document.createElement('div');
+  spacerContainer.classList.add('spacer-container');
+  discountLabel.after(spacerContainer);
+
+  const spacer = document.createElement('img');
+  spacer.classList.add('modal__spacer');
+  spacerContainer.appendChild(spacer);
+
+  const messageContainer = document.createElement('div');
+  messageContainer.classList.add('message-container');
+  spacerContainer.appendChild(messageContainer);
+
+  const message = document.createElement('p');
+  message.textContent = 'Изображение не должно превышать размер 1 Мб';
+  message.style.color = 'red';
+
+
+    if (fileInput.files.length > 0) {
+      const selectedFile = fileInput.files[0];
+      const fileSizeInMb = selectedFile.size / (1024 * 1024);
+      if (fileSizeInMb > 1) {
+        messageContainer.appendChild(message);
+      } else {
+        const src = URL.createObjectURL(selectedFile);
+        
+        spacer.style.display = 'block';
+        spacer.src = src;
+      console.log(selectedFile)
+      }
+    }
+
+});
+
+
 
   fieldset.appendChild(nameLabel);
   fieldset.appendChild(categoryLabel);
@@ -423,8 +453,11 @@ const openEditModal = ({ id, title, price, category, count, units, discount , de
       count: parseInt(countInput.value), 
       units: unitsInput.value,
       discount: discountInput.checked ? parseFloat(formData.get('discount_count')) : null, 
-      description: formData.get('description')
+      description: formData.get('description'),
+     
     };
+    
+ 
     saveChanges(id, updatedData);
     closeModal();
    
@@ -461,7 +494,7 @@ const openEditModal = ({ id, title, price, category, count, units, discount , de
 
 
 
-const saveChanges = (id, updatedData) => {
+const saveChanges = async(id, updatedData) => {
   fetch(`http://localhost:3000/api/goods/${id}`, {
     method: 'PATCH',
     headers: {
@@ -482,6 +515,15 @@ const saveChanges = (id, updatedData) => {
     .catch((error) => {
       console.error('Error saving changes:', error);
     });
+    
+    const imageFile = await toBase(updatedData.image);
+    if (imageFile) {
+      // Upload the image file and get the URL
+      const imageURL = await uploadImage(imageFile);
+      // Set the image URL in the updatedData object
+      updatedData.image = `http://localhost:3000/${imageURL}`;
+    }
+
 };
 
 const updateRow = (id, updatedData) => {
@@ -513,7 +555,7 @@ const updateRow = (id, updatedData) => {
 
 
 const displayErrorMessageModal = (message) => {
-  // Create the error modal
+  
   const errorModal = document.createElement('div');
   errorModal.classList.add('modal');
   errorModal.setAttribute('id', 'errorModal');

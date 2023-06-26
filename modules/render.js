@@ -10,7 +10,7 @@ import{allTotalTableSum} from './summs.js';
 export const loadGoods = async () => {
   const response = await fetch('http://localhost:3000/api/goods');
   const data = await response.json();
-  console.log(data);
+
   return data;
 };
 

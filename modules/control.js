@@ -15,7 +15,7 @@ const { btn,
 import {closeModal,  openModal}  from './modal.js'
 import {getTotal, allTotalTableSum}  from './summs.js'
 import{addProductData, numbers,  addProductPage} from './table.js';
-
+import {toBase}  from './picture.js'
 
 export const formModal = () =>{
     form.addEventListener('submit', async (e) => {
@@ -25,6 +25,9 @@ export const formModal = () =>{
         const formData = new FormData(e.target);
       
         const newProduct = Object.fromEntries(formData);
+
+        newProduct.image = await toBase(newProduct.image);
+        
         newProduct.id = document.querySelector('.vendor-code__id').textContent;
       
         newProduct.discont = document.querySelector('.modal__input_discount').value;
@@ -151,7 +154,7 @@ export const openWindow = () => {
         const data = await response.json();
         console.log(data);
 
-        const pictureUrl = `http://localhost:3000/api/goods/${data.image}`;
+        const pictureUrl = `http://localhost:3000/${data.image}`;
 
         const w = screen.width / 2 - 400;
         const h = screen.height / 2 - 300;
