@@ -3,7 +3,7 @@ import{  getTotal, allTotalTableSum} from './summs.js';
 import{ toBase} from './picture.js';
 import{ numbers} from './table.js';
 
-export const openEditModal = ({ id, title, price, category, count, units, discount ,description,image }) => {
+export const openEditModal = async ({ id, title, price, category, count, units, discount ,description,image }) => {
     fetchCategories(); 
    
   
@@ -201,7 +201,12 @@ export const openEditModal = ({ id, title, price, category, count, units, discou
     fileInput.classList.add('modal__file_two', 'visually-hidden');
     fileInput.setAttribute('type', 'file');
     fileInput.setAttribute('id', 'image2');
+
+    const spacerContainer = document.createElement('div');
+    spacerContainer.classList.add('spacer-container');
+ 
   
+    
    
     fieldset.appendChild(nameLabel);
     fieldset.appendChild(categoryLabel);
@@ -212,7 +217,8 @@ export const openEditModal = ({ id, title, price, category, count, units, discou
     fieldset.appendChild(priceLabel);
     fieldset.appendChild(fileLabel);
     fieldset.appendChild(fileInput);
-    
+    fieldset.appendChild(document.createElement('br'));
+    fieldset.appendChild(spacerContainer);
   
     const footer = document.createElement('div');
     footer.classList.add('modal__footer');
@@ -231,7 +237,35 @@ export const openEditModal = ({ id, title, price, category, count, units, discou
     submitButton.classList.add('modal__submit');
     submitButton.setAttribute('type', 'submit');
     submitButton.textContent = 'Сохранить изменения';
-  
+
+
+
+    const modalImage = document.createElement('img');
+    modalImage.classList.add('modal__image');
+    spacerContainer.appendChild(modalImage);
+
+
+    const modalPic = async ()=> {
+      try {
+        const response = await fetch(`http://localhost:3000/api/goods/${id}`);
+        if (!response.ok) {
+          throw new Error('Image not found');
+        }
+    
+        const data = await response.json();
+        console.log(data);
+    
+        const pictureUrl = `http://localhost:3000/${data.image}`;
+    
+        
+        modalImage.setAttribute('src', pictureUrl);
+        modalImage.setAttribute('alt', 'Product Image');
+       
+   
+      } catch (error) {
+        console.error('Error retrieving image:', error);
+      }
+    }
   
    const closeModal = () => {
       modalContainer.classList.remove('active');
@@ -294,10 +328,15 @@ export const openEditModal = ({ id, title, price, category, count, units, discou
     modalContent.appendChild(closeButton);
     modalContent.appendChild(modalTop);
     modalContent.appendChild(modalform);
+
+ 
+   modalPic()
+      modalContainer.appendChild(modalContent);
+      document.body.appendChild(modalContainer);
   
-    modalContainer.appendChild(modalContent);
-    document.body.appendChild(modalContainer);
-  };
+    }
+   
+ 
   
   
   
@@ -352,3 +391,7 @@ export const saveChanges = async (id, updatedData) => {
     }
   };
     
+
+
+
+  

@@ -11,14 +11,14 @@ const {
   file,
 
   spacer,
-  spacerContainer,
+  spacerCon,
   messageContainer} = picture;
   
   
     const closeModal = () => {
       file.value = '';
       spacer.src = '';
-      spacerContainer.style.display = 'none';
+      spacerCon.style.display = 'none';
       messageContainer.style.display = 'none';
     
     
