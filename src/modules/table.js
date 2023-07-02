@@ -18,20 +18,17 @@ const addProductData = async (product) => {
     });
 
     if (response.ok) {
-      
-      const data = await response.json();
-      console.log(data);
+      const newProduct = await response.json();
+      const newRow = createRow(newProduct);
+      table.appendChild(newRow);
 
-      addProductPage(product, table);
       numbers();
       await allTotalTableSum();
     } else if (response.status === 422 || response.status === 404 || response.status >= 500) {
-     
       const errorData = await response.json();
       const errorMessage = errorData.message; 
       console.log(errorMessage); 
     } else {
-      
       throw new Error('Something went wrong...');
     }
   } catch (error) {
@@ -39,9 +36,6 @@ const addProductData = async (product) => {
     displayErrorMessageModal('Something went wrong...'); 
   }
 };
-
-
-
 
 
 
